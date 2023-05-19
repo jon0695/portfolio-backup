@@ -1,0 +1,10 @@
+html,body{
+    height:100%;
+    width:100%;
+}
+button{
+    position:absolute;
+    margin:auto;
+    top:50%;
+    left:42%;
+}
