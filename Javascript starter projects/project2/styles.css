@@ -1,0 +1,23 @@
+.container{
+    display:flex;
+    align-content:center;
+    justify-content: center;
+    text-align:center;
+    height:100vh;
+    flex-direction: column;
+}
+
+.title-banner{
+    margin:3rem;
+    animation: animateTextColor 5s infinite alternate;
+}
+
+@keyframes animateTextColor{
+    /*There must be a simpler way to animate the color wheel*/
+    0%{color:#00ffea}
+    20%{color:#7600fd}
+    40%{color:#0030ce}
+    60%{color:#00ff6a}
+    80%{color:#e5ff00}
+    100%{color:#ff1100}
+}
