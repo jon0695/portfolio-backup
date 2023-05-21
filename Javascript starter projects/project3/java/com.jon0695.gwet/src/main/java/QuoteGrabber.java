@@ -13,15 +13,18 @@ public class QuoteGrabber {
     public static void run() {
         WebDriver driver = new ChromeDriver();
         List<WebElement> quoteDivs = new ArrayList<WebElement>();
+        String url = "";
 
-        quoteDivs = getWebElements(driver);
+        quoteDivs = getWebElements(driver, url);
 
-        String fileName = "Put full directory and fileName here";
+        String directory = "";
+        String fileName = "famousQuotes.json";
+        String completeFileName = directory + fileName;
 
         System.out.println("Running 'checkForFileValidity(fileName);'");
-        checkForFileValidity(fileName);
+        checkForFileValidity(completeFileName);
         System.out.println("Running 'writeWebElementsToFile(fileName, quoteDivs);'");
-        writeWebElementsToFile(fileName, quoteDivs);
+        writeWebElementsToJSONFile(completeFileName, quoteDivs);
 
         driver.close();
     }
@@ -29,19 +32,23 @@ public class QuoteGrabber {
     public static void run(String fileName) {
         WebDriver driver = new ChromeDriver();
         List<WebElement> quoteDivs = new ArrayList<WebElement>();
+        String url = "";
 
-        quoteDivs = getWebElements(driver);
+        quoteDivs = getWebElements(driver, url);
+
+        String directory = "";
+        String completeFileName = directory + fileName;
 
         System.out.println("Running 'checkForFileValidity(fileName);'");
-        checkForFileValidity(fileName);
+        checkForFileValidity(completeFileName);
         System.out.println("Running 'writeWebElementsToFile(fileName, quoteDivs);'");
-        writeWebElementsToFile(fileName, quoteDivs);
+        writeWebElementsToJSONFile(completeFileName, quoteDivs);
 
         driver.close();
     }
 
-    public static List<WebElement> getWebElements(WebDriver driver){
-        String url = "https://www.goodreads.com/quotes/tag/free";
+    public static List<WebElement> getWebElements(WebDriver driver, String url){
+
         driver.get(url);
 
         //I didn't write this part, but I assume we can't just ask the browser when the page has finished loading?
@@ -50,7 +57,7 @@ public class QuoteGrabber {
 
         return quoteDivs;
     }
-    public static void checkForFileValidity(String fileName){
+    public static boolean checkForFileValidity(String fileName){
         try {
             File myQuotesFile = new File(fileName);
 
@@ -62,13 +69,7 @@ public class QuoteGrabber {
             }else{
                 System.out.println("File Exists.");
             }
-
-            if(myQuotesFile.canWrite()){
-                System.out.println("File Can Be Written into.");
-            } else {
-                System.out.println("Cannot write to File.");
-                throw new IOException();
-            }
+            return myQuotesFile.canWrite();
         }catch (SecurityException secE){
             System.out.println("A security error occurred.");
             secE.printStackTrace();
@@ -77,21 +78,39 @@ public class QuoteGrabber {
             System.out.println("An error occurred. If your on Linux, make sure you include the leading '/' in your argument.");
             e.printStackTrace();
         }
+    return false;
     }
-    public static synchronized void writeWebElementsToFile(String fileName, List<WebElement> elementList){
+    public static synchronized void writeWebElementsToJSONFile(String fileName, List<WebElement> elementList){
+
         try {
             FileWriter writeObj = new FileWriter(fileName);
-            elementList.forEach((WebElement element) -> {
+            writeObj.write("{");
+            for(int i = 0; i < elementList.size(); i++){
+                String key = ("quote" + i);
+                String value = scrubText(elementList.get(i).getText());
                 try {
-                    writeObj.write("\n\n{" + element.getText() + "}");
+                    writeObj.write(String.format(" \"%s\" :  \"%s\" ", key, value));
+                    if(i != elementList.size()-1){
+                        writeObj.write(",\n\n");
+                    }
                 }catch(IOException e){
                     System.out.println("Couldn't write text to file in 'writeWebElementsToFile().elementList.forEach()'");
                     e.printStackTrace();
                 }
-            });
+            };
+            writeObj.write("}");
+            writeObj.close();
         }catch(IOException e){
             System.out.println("Could not create 'FileWriter' in 'writeWebElementsToFile(String, List<>)'");
             e.printStackTrace();
         }
+    }
+    public static String scrubText(String value){
+        value = value.replaceAll("\"","");
+        value = value.replaceAll("\n","");
+        value = value.replaceAll("“","'");
+        value = value.replaceAll("”","'");
+        value = value.replaceAll("―", " ~~");
+        return value;
     }
 }
