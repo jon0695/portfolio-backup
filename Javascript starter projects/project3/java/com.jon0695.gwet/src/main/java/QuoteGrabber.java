@@ -11,22 +11,8 @@ import java.io.*;
 public class QuoteGrabber {
     //Without a fileName defined when calling
     public static void run() {
-        WebDriver driver = new ChromeDriver();
-        List<WebElement> quoteDivs = new ArrayList<WebElement>();
-        String url = "";
-
-        quoteDivs = getWebElements(driver, url);
-
-        String directory = "";
         String fileName = "famousQuotes.json";
-        String completeFileName = directory + fileName;
-
-        System.out.println("Running 'checkForFileValidity(fileName);'");
-        checkForFileValidity(completeFileName);
-        System.out.println("Running 'writeWebElementsToFile(fileName, quoteDivs);'");
-        writeWebElementsToJSONFile(completeFileName, quoteDivs);
-
-        driver.close();
+        this.run(fileName);
     }
     //With a fileName defined when calling
     public static void run(String fileName) {
