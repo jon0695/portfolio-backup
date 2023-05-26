@@ -1,9 +1,35 @@
+body{
+    height:100vh;
+    min-height:55rem;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-image:linear-gradient(to bottom, white, black);
+}
 .container{
     display:flex;
+    align-self:center;
     align-content:center;
     justify-content:center;
     text-align:center;
     flex-direction:column;
-    height:100vh;
-    color:red;
+    height:45rem;
+    width:45rem;
+    border:outset black 2rem;
+    background-color:rgb(245, 245, 220);
+    color:rgb(100, 100, 87);
+}
+.my-button{
+    position:relative;
+    align-self: center;
+    top:45px;
+    width:fit-content;
+}
+#quoteP{
+    font-size:1.5rem;
+}
+#author{
+    font-size:1.5rem;
+    font-weight: bold;
 }

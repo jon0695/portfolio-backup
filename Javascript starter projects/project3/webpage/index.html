@@ -7,11 +7,12 @@
     <title>Quote 'Generator'</title>
     <link rel="stylesheet" href="./styles.css"/>
 </head>
-<body>
+<body onload="changeQuote()">
     <div class="container">
-        <p id="quoteContainer">Show This</p>
-        <button type="button" onclick="changeQuote()">Change Quote</button>
+        <p id="quoteP">Show This If Something Goes Wrong</p>
+        <p id="author">Author name goes here</p>
     </div>
+    <button type="button" onclick="changeQuote()" class="my-button">Change Quote</button>
     <script src="./script.js"></script>
 </body>
 </html>
