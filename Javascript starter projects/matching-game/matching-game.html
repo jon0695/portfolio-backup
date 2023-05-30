@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Game</title>
+</head>
+
+<!-- <body onload="generateFaces()"> -->
+
+<body>
+    <div class="program-container">
+        <div id="title-container" class="title-container">
+            <h1>Matching Game</h1>
+            <p>Click on the extra smiling face on the left.</p>
+            <button type="button" id="start-button" onclick="restartGame()">Start Game</button>
+            <p class="turn-tracker-display" id="turn-tracker-display">0000</p>
+        </div>
+        <div class="game-container" id="game-board">
+            <div id="leftSide"></div>
+            <div id="rightSide"></div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            height: 100vh;
+        }
+
+        .program-container {
+            background-image: linear-gradient(to top, black, white);
+            height: 750px;
+            width: 1000px;
+        }
+
+        img {
+            position: relative;
+        }
+
+        .game-container>div {
+            position: relative;
+            margin: 0;
+            width: 500px;
+            height: 500px;
+        }
+
+        #rightSide {
+            left: 500px;
+            top: -500px;
+            border-left: 1px solid;
+        }
+
+        .title-container {
+            padding: 10px;
+            border: 40px outset rgb(187, 187, 187);
+        }
+
+        .turn-tracker-display {
+            background-image: linear-gradient(to bottom right, black, rgb(145, 145, 145));
+            border: inset 0.5rem rgb(155, 155, 155);
+            color: red;
+            position: relative;
+            margin: 0;
+            float: right;
+            right: 100px;
+            bottom: 80px;
+            font-size: 3rem;
+        }
+    </style>
+    <script>
+        let numberOfFaces = 1;
+        let difficulty = 0;
+        const theLeftSide = document.getElementById('leftSide');
+        const theRightSide = document.querySelector("#rightSide");
+        const gameBoard = document.getElementById('game-board');
+        let turnCounter = 0;
+
+        // console.log(theLeftSide);
+        // console.log(theRightSide);
+
+        function setDifficulty() {
+            let newValue = prompt('Please Select a difficulty');
+            newValue = Number(newValue);
+            if (newValue) {
+                changeButtonText('Restart Game');
+                difficulty = numberOfFaces = newValue;
+                alert("Difficulty has been changed to : " + newValue);
+                generateFaces();
+            } else if (newValue === 0) {
+                alert("Game Start cancelled, Or Difficulty Was Zero. Hit Restart When You Aren't Feeling So Smug.");
+                //addRestartButton();
+            } else {
+                console.log(newValue);
+                alert("Please Pick a valid difficulty.");
+                setDifficulty();
+            }
+            //console.log(numberOfFaces);
+        }
+
+        function pad(num, size) {
+            num = num.toString();
+            while (num.length < size) num = "0" + num;
+            return num;
+        }
+
+        function generateFaces() {
+            theLeftSide.addEventListener('click', gameOver);
+            document.getElementById('turn-tracker-display').textContent = pad(turnCounter,4);
+
+            //console.log(numberOfFaces); //Tracked due to unusual number being added. -Fixed
+
+            //Why didn't I just do this once during the project? Preforming the action here makes way more sense.
+            removeAllBoardImgs();
+
+            //For every element of 'numberOfFaces',
+            for (let i = 0; i < numberOfFaces; i++) {
+                //Create An Img element, with 'smile.png' as the src,
+                let face = document.createElement('img');
+                face.style.position = "absolute";
+                face.src = './images/smile.png';
+
+                //Create a random position on both x and y,
+                let randomTop = Math.floor(Math.random() * 400) + 1;
+                let randomLeft = Math.floor(Math.random() * 400) + 1;
+
+                //Set the position of the current img to the random numbers,
+                //This should be relative to the containing element.
+                face.style.top = randomTop + 'px';
+                face.style.left = randomLeft + 'px';
+
+                //append the img to the element with the ID 'leftSide', 
+                //set globally at the start of the script.
+                theLeftSide.appendChild(face);
+            }
+
+            //Clone the entire node tree under the element with the ID 'leftSide'
+            let leftSideImages = theLeftSide.cloneNode(true);
+            //Remove the last element from that tree, 
+            //which guaranties the user will always be able to click it later,
+            // since it's rendered on top of the others
+            leftSideImages.removeChild(leftSideImages.lastChild);
+            //then append the edited clone to the element with the ID 'rightSide'
+            theRightSide.appendChild(leftSideImages);
+
+            //Finally add a method to listen for the 'click' event from
+            theLeftSide.lastChild.addEventListener('click', nextLevel);
+            //console.log(document.body);
+            console.log("Adding Listeners");
+
+
+        }
+
+        function gameOver() {
+            //Alert player of Game Over, and remove gameOver/nextLevel listeners to prevent odd behavior
+            alert("Game Over. You survived : " + turnCounter + " Turns");
+            console.log("Removing Listener");
+            theLeftSide.removeEventListener('click', gameOver);
+            theLeftSide.removeEventListener('click', nextLevel);
+
+
+
+            //addRestartButton();
+        }
+
+        function changeButtonText(newText) {
+            document.getElementById('start-button').textContent = newText;
+        }
+
+        // function addRestartButton(){
+        //     //Creating Restart Button Programmatically, entirely for sng...
+        //     // and it looks a bit slicker for the game to react to the player's actions.
+        //     let restartButton = document.createElement('button');
+        //     restartButton.textContent = "Restart";
+        //     restartButton.addEventListener('click', restartGame);
+        //     document.getElementById('title-container').appendChild(restartButton);
+        // }
+        //decided to change how this works, keeping it here for historical reasons.
+
+        function restartGame() {
+            console.log("Running 'restartGame()");
+            setDifficulty();
+            //removeAllBoardImgs();
+
+            //This is a neat trick to reload the page programmatically.
+            //I'm not using it anymore, but i'm keeping it around
+            //since I didn't know about it before starting this project.
+        }
+
+        function removeAllBoardImgs() {
+            console.log("Running 'removeAllBoardImgs()");
+            while (theRightSide.firstChild) {
+                theRightSide.removeChild(theRightSide.firstChild);
+            }
+            while (theLeftSide.firstChild) {
+                theLeftSide.removeChild(theLeftSide.firstChild);
+            }
+        }
+
+        function nextLevel(event) {
+            console.log("Running 'nextLevel()");
+
+            //Learned this is what prevents the gameOver Listener from running,
+            //not just the element being rendered on top... That doesn't prevent anything from running,
+            //it just ensures the player can always tell which face is missing.
+            event.stopPropagation();
+
+            //Increase the number of faces rendered by the difficulty,
+            numberOfFaces += difficulty;
+            //console.log("After adding 'difficulty' ("+ difficulty +") to 'numberOfFaces', there should be " + numberOfFaces + " Faces");
+            //Add a turn to the tracker
+            turnCounter++;
+
+            generateFaces();
+        }
+        //window.addEventListener('load', setDifficulty);
+    </script>
+</body>
+
+</html>
