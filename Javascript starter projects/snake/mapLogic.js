@@ -8,7 +8,7 @@ export class MapLogic {
 
     //Called whenever 'objectTracker.addPieceToBoard()' is called.
     static changeGridSpace(gamePiece) {//Should be a gameObject
-        console.log("Running 'changeGridSpace()' with " + gamePiece);
+        console.log("Running 'changeGridSpace()' with " + gamePiece.pieceType);
         if (this.checkForValidPlacement(gamePiece)) {
             gridSpaces[gamePiece.x][gamePiece.y] = gamePiece;
             let spaceToChange = document.querySelector(`[data-y-cord="${gamePiece.y}"][data-x-cord="${gamePiece.x}"]`);

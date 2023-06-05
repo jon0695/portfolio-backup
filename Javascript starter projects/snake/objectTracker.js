@@ -4,7 +4,6 @@ import { BlankSpace, GameObject } from './gameObjects.js';
 /*
     So the idea is GameObjectTracker will hold the logical objects and the mapLogic class will use them to print the objects to the screen.
     Their positions should be set/edited from here.
-    
 */
 export class GameObjectTracker {
 
@@ -26,6 +25,7 @@ export class GameObjectTracker {
     static addPieceToBoard(newPiece) {//Should be type 'GameObject'
         console.log("Running 'addPieceToBoard()'");
         if (!this.checkForOverlap(newPiece)) {
+            newPiece.onBoard = true;
             this.gamePieces.push(newPiece);
             MapLogic.changeGridSpace(newPiece);
         } else {
@@ -43,10 +43,10 @@ export class GameObjectTracker {
 
     static movePiece(piece){//Needs the index of the piece to move, and an object with the new cords {x: ?, y: ?}.
         console.log("Running 'movePiece() in objectTracker");
-        //console.log(piece);
-        console.log("About to run 'MapLogic' to add a blank space from 'movePiece()'");
+        console.log(piece);
+        //console.log("About to run 'MapLogic' to add a blank space from 'movePiece()'");
         MapLogic.changeGridSpace(new BlankSpace(piece.oldX, piece.oldY));
-        console.log("About to run 'MapLogic' to move a piece from 'movePiece()'");
+        //console.log("About to run 'MapLogic' to move a piece from 'movePiece()'");
         MapLogic.changeGridSpace(piece);
     }//Might combine these two into one method to save just a bit of space
 
@@ -64,20 +64,6 @@ export class GameObjectTracker {
         }
         return overlapping;
     }
-
-    //Right now, I don't see any reason for this to exist...
-    static checkForEveryOverlap() {
-        console.log("Running 'checkForEveryOverlap()'");
-        let otherPieces = [...this.gamePieces];
-        for (let currentPiece of this.gamePieces) {
-            otherPieces.splice(0, 1);
-            for (let otherPiece of otherPieces) {
-                if (this.checkForColumnOverlap(currentPiece, otherPiece) && this.checkForRowOverlap(currentPiece, otherPiece)) {
-                    console.log("A Piece is overlapping another");
-                }
-            }
-        }
-    }//Right now, I don't see any reason for this to exist...
 
     //check the 'x' cord between two gameObjects
     static checkForColumnOverlap(firstPiece, otherPiece) {
@@ -98,16 +84,4 @@ export class GameObjectTracker {
         }
         return false;
     }
-
-    // placeAllPiecesOnMap(gameObjects:GameObject[]){
-    //     for(let piece of gameObjects){
-    //         this.placePieceOnMap(piece);
-    //     }
-    // }
-
-    // placePieceOnMap(piece:GameObject){
-    //     this.gamePieces.push(piece);
-    // }
-
-    //I think I'll need methods like this in the future, but not right now. Still keeping them around.
 }

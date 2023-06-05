@@ -4,12 +4,13 @@ import {GameObjectTracker} from './objectTracker.js'
 
 MapLogic.prepGrid();
 GameObjectTracker.initalizePieces([
-    new Player(0,0,"Jon"),
+    new Player(0,0,6),
 ])
 
 
 const test = () => {
     console.log("Running 'test()' in gameLogic");
+    GameObjectTracker.gamePieces[0].addToSnakeBodyArray(1);
 }
 
 const runGame = () => {
