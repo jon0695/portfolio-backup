@@ -6,6 +6,18 @@ let gridSpaces = [];
 //TODO- I need a method to change an existing gridSpace to represent an object.
 export class MapLogic {
 
+    //Called whenever 'objectTracker.addPieceToBoard()' is called.
+    static changeGridSpace(gamePiece) {//Should be a gameObject
+        console.log("Running 'changeGridSpace()' with " + gamePiece);
+        if (this.checkForValidPlacement(gamePiece)) {
+            gridSpaces[gamePiece.x][gamePiece.y] = gamePiece;
+            let spaceToChange = document.querySelector(`[data-y-cord="${gamePiece.y}"][data-x-cord="${gamePiece.x}"]`);
+            //console.log(spaceToChange);
+            spaceToChange.src = gamePiece.src;
+        }
+    }
+
+
     //Should only be called once at when the page loads
     static prepGrid() {
         console.log("Running 'prepGrid()");
@@ -16,7 +28,7 @@ export class MapLogic {
 
         let gridRow = [];
         let currentX = 0;
-        let currentY = 0;
+        let currentY = GRID_HEIGHT - 1;//Starts from the top because elements are added from the top left. So with this, (0,0) will be the bottom left.
 
         //console.log("Running 'prepGrid() forloop");
         for (let i = 0; i < GRID_HEIGHT; i++) {
@@ -32,41 +44,17 @@ export class MapLogic {
             gridSpaces.push(gridRow);
             //console.log("Just added new Row to 'gridSpaces[" + i + "]");
             currentX = 0;
-            currentY++;
+            currentY--;
         }
         MapLogic.renderGrid();
         // console.log("Reached the end of 'prepGrid()'");
-    }
-
-    //Called whenever 'objectTracker.addPieceToBoard()' is called.
-    static changeGridSpace(gamePiece) {//Should be a gameObject
-        console.log("Running 'changeGridSpace()'");
-        if (this.checkForValidPlacement(gamePiece)) {
-            gridSpaces[gamePiece.x][gamePiece.y] = gamePiece;
-            let spaceToChange = document.querySelector(`[data-y-cord="${gamePiece.y}"][data-x-cord="${gamePiece.x}"]`);
-            console.log(spaceToChange);
-            spaceToChange.src = gamePiece.src;
-        }
     }
 
     //Used with 'prepGrid()' when the page is loaded
     //Creates new <img>'s with the 'BlankSpace' gameObject. One for every item in 'gridSpaces[]'
     static renderGrid() {
         console.log("Running 'renderGrid()'");
-        console.log(gridSpaces);
-        // for (let row of gridSpaces) {
-        //     for (let space of row) {
-        //         console.log(space);
-        //         if (this.checkForValidPlacement(space)) {
-        //             let pieceHTML = document.createElement('img');
-        //             pieceHTML.src = space.src;
-        //             pieceHTML.style.position = 'relative';
-        //             GAME_WINDOW.appendChild(pieceHTML);
-        //         } else {
-        //             console.log("Failed 'checkForValidPlacement', gameObject is trying to spawn outside the map.");
-        //         }
-        //     }
-        // }
+        //console.log(gridSpaces);
 
         for (let row of gridSpaces) {
             for (let space of row) {
@@ -80,11 +68,9 @@ export class MapLogic {
             }
         }
     }
-    //This should be the final version of this loop after testing is finished. No reason to check for something I know won't happen.
-
     static checkForValidPlacement(piece) {
-        console.log("Checking " + piece + " for validity");
-        console.log(piece.x+":"+piece.y);
+        // console.log("Checking " + piece + " for validity");
+        //console.log(piece.x+":"+piece.y);
         if (piece.x < 0 || piece.x > GRID_WIDTH) {
             console.log("Check Failed");
             return false;
@@ -97,5 +83,3 @@ export class MapLogic {
     }
 }
 
-    //Making sure you don't spawn spaces outside the play area, When everything is done I won't need this check.
-    //Keeping it here for historical purposes
