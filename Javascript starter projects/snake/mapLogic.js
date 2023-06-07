@@ -3,12 +3,11 @@ import { BlankSpace, Placeholder } from './gameObjects.js';
 
 let gridSpaces = [];
 
-//TODO- I need a method to change an existing gridSpace to represent an object.
 export class MapLogic {
 
     //Called whenever 'objectTracker.addPieceToBoard()' is called.
     static changeGridSpace(gamePiece) {//Should be a gameObject
-        console.log("Running 'changeGridSpace()' with " + gamePiece.pieceType);
+        //console.log("Running 'changeGridSpace()' with " + gamePiece.pieceType);
         if (this.checkForValidPlacement(gamePiece)) {
             gridSpaces[gamePiece.x][gamePiece.y] = gamePiece;
             let spaceToChange = document.querySelector(`[data-y-cord="${gamePiece.y}"][data-x-cord="${gamePiece.x}"]`);
@@ -20,7 +19,7 @@ export class MapLogic {
 
     //Should only be called once at when the page loads
     static prepGrid() {
-        console.log("Running 'prepGrid()");
+        //console.log("Running 'prepGrid()");
         // console.log("GRID_SIZE  is : " + GRID_SIZE);
 
         // console.log("Resetting 'gridSpaces[]' to blank array for peace of mind.");
@@ -53,7 +52,7 @@ export class MapLogic {
     //Used with 'prepGrid()' when the page is loaded
     //Creates new <img>'s with the 'BlankSpace' gameObject. One for every item in 'gridSpaces[]'
     static renderGrid() {
-        console.log("Running 'renderGrid()'");
+        //console.log("Running 'renderGrid()'");
         //console.log(gridSpaces);
 
         for (let row of gridSpaces) {
@@ -69,7 +68,7 @@ export class MapLogic {
         }
     }
     static checkForValidPlacement(piece) {
-        // console.log("Checking " + piece + " for validity");
+        //console.log("Checking " + piece + " for validity");
         //console.log(piece.x+":"+piece.y);
         if (piece.x < 0 || piece.x > GRID_WIDTH) {
             console.log("Check Failed");

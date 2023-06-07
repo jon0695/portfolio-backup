@@ -14,19 +14,29 @@
     <div class="game-window" id="game-window">
         <!-- Should add this programmatically -->
     </div>
-    <div class="on-screen-controls">
+    <div class="ui">
         <button type="button" id="play-button">PLAY (Does Nothing Now)</button>
-        <button type="button" id="button-2">Test!</button>
+        <div>
+            <button type="button" id="tick-button">Manual Tick!</button>
+            <button type="'button" id="reset-ticks-b">Reset Ticks Number!</button>
+        </div>
+        
+        <div class="settings">
+            <label for="speed">Game Speed : </label>
+            <input id="speed" name="speed" class="speed-control" type="number" value="2" min="1" max="4"/>
+            <label for="toggle-keyboard">Toggle Keyboard Controls : </label>
+            <button type="button" id="toggle-keyboard" name="toggle-keyboard">Disabled</button>
+        </div>
         <div class="movement-controls">
             <div>
-                <button type="button" id="up">/\</button>
+                <button type="button" id="up" class="movement-button">/\</button>
             </div>
-            <button type="button" id="left"><</button>
-            <button type="button" id="down">\/</button>
-            <button type="button" id="right">></button>
-            <!-- I know I shouldn't do this just for styling... but I'm being lazy today -->
+            <div>
+                <button type="button" id="left" class="movement-button"><</button>
+                <button type="button" id="down" class="movement-button">\/</button>
+                <button type="button" id="right" class="movement-button">></button>
+            </div>
         </div>
-
     </div>
 </body>
 

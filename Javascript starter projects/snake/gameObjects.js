@@ -1,13 +1,14 @@
 
 class GameObject {
     id;
-    pieceType;
+    pieceType = 'gameObject';
     src;
     x;
     y;
     oldX;
     oldY;
     onBoard = false;
+    direction = 'north';
     constructor(x, y) {
         //console.log("Running 'GameObject construtor' : x=" + x + " y=" + y);
         this.id = Math.random() * 3000;
@@ -16,12 +17,6 @@ class GameObject {
         this.oldY = y;
         this.oldX = x;
     }
-}
-
-
-class Apple extends GameObject {
-    pieceType = 'apple';
-    src = './images/svg/apple.svg';
 }
 
 class Placeholder extends GameObject {
@@ -36,7 +31,6 @@ class BlankSpace extends GameObject {
 
 export {
     GameObject,
-    Apple,
     Placeholder,
     BlankSpace
 }
