@@ -1,6 +1,7 @@
 import { MapLogic } from './mapLogic.js';
 import { BlankSpace, GameObject } from './gameObjects.js';
-
+import { Collision } from './collisionGObject.js';
+import { randomCords } from './globals.js';
 /*
     So the idea is GameObjectTracker will hold the logical objects and the mapLogic class will use them to print the objects to the screen.
     Their positions should be set/edited from here.
@@ -20,7 +21,6 @@ export class GameObjectTracker {
         }
     }
 
-    static spawnPoint = [0, 0];
     static gamePieces = [];//shouldn't really be accessed from outside directly.
 
     static pieceCount = 0;
@@ -31,31 +31,35 @@ export class GameObjectTracker {
         //console.log(overlap);
         if (!overlap) {
             newPiece.onBoard = true;
-            newPiece.id = this.pieceCount;
             this.pieceCount++;
+            newPiece.pieceNumber = this.pieceCount;
             //console.log("newPiece ID : "+ newPiece.id + "/ pieceCount : " + GameObjectTracker.pieceCount);
             this.gamePieces.push(newPiece);
+
             MapLogic.changeGridSpace(newPiece);
         } else {
             console.log("Tried to add " + newPiece + " to the Board, But it overlapped with something and couldn't spawn.");
             console.log("It was overlapping with " + overlap.pieceType + " id:"+overlap.id);
+            newCords = randomCords();
+            console.log("Trying new cords..." + cords.x + "," + cords.y);
+            newPiece.x = cords.x;
+            newPiece.y = cords.y;
+            addPieceToBoard(newPiece);
         }
 
     }
 
-    static removePieceFromBoard(index) {//Change to Game Piece
-        console.log("Running 'removePieceFromBoard()");
-        blank = { x: gamePieces[index].x, y: gamePieces[index].y }; //need the placement of the piece that's being removed.
-        MapLogic.changeGridSpace(new BlankSpace(blank.x, blank.y));
+    static removePieceFromBoard(piece) {//Change to Game Piece
+        console.log("Running 'removePieceFromBoard("+ piece.pieceType + ":" + piece.id + ")");
+        let index = this.gamePieces.findIndex((element)=>{
+           return piece.id === element.id;
+        })
+        console.log("I think the index of that " + piece.pieceType + " is " + index);
+        console.log(this.gamePieces[index]);
         this.gamePieces.splice(index, 1);
     }
 
-    static movePiece(piece){
-        //console.log("Running 'movePiece() in objectTracker");
-        //console.log(piece);
-        //console.log("About to run 'MapLogic' to add a blank space from 'movePiece()'");
-        MapLogic.changeGridSpace(new BlankSpace(piece.oldX, piece.oldY));
-        //console.log("About to run 'MapLogic' to move a piece from 'movePiece()'");
+    static drawPiece(piece){
         MapLogic.changeGridSpace(piece);
         return this.checkForOverlap(piece);
     }

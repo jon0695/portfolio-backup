@@ -1,6 +1,8 @@
 
 class GameObject {
     id;
+    indexId;
+    pieceNumber;
     pieceType = 'gameObject';
     src;
     x;
@@ -16,6 +18,11 @@ class GameObject {
         this.y = y;
         this.oldY = y;
         this.oldX = x;
+    }
+
+    changeDirection(newDir){
+        console.log("Running 'changeDirection(" + newDir + ")'");
+        this.direction = newDir;
     }
 }
 

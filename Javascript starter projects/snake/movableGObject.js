@@ -1,33 +1,45 @@
 import { GRID_WIDTH, GRID_HEIGHT } from './globals.js';
 import { GameObjectTracker } from './objectTracker.js';
 import {GameObject} from "./gameObjects.js";
+import {WallObject} from './wallGObject.js';
 
 export class Movable extends GameObject {
+
+    constructor(x,y){
+        super(x,y);
+    }
 
     move(moveObject) {//Moveable, {x:number, y:number}
         //console.log("Running 'move()' in Movable");
         //console.log("Checking cords.x : " + cords.x + ", Against GRID_WIDTH : " + (GRID_WIDTH - 1));
         let cords = this.determineDirection(moveObject);
 
-        if (cords.x < (GRID_WIDTH - 1) && cords.x >= 0) {
-            if (cords.y < (GRID_HEIGHT - 1) && cords.y >= 0) {
+        if (cords.x < (GRID_WIDTH) && cords.x >= 0) {
+            if (cords.y < (GRID_HEIGHT) && cords.y >= 0) {
                 //console.log("Checking cords.y : " + cords.x + ", Against GRID_HEIGHT : " + (GRID_HEIGHT - 1));
                 this.saveLastMove(moveObject);
                 moveObject.x = cords.x;
                 moveObject.y = cords.y;
-                let overlap = GameObjectTracker.movePiece(moveObject);
+                let overlap = GameObjectTracker.drawPiece(moveObject);
                 console.log("Overlap returned " + overlap);
                 if(overlap){
-                    console.log(this.pieceType+" sees an overlap with " + overlap.pieceType);
+                    console.log(moveObject.pieceType+" sees an overlap with " + overlap.pieceType);
+                    return moveObject.handleCollision(overlap);
                 }
-                return true;
+                return true;//used elsewhere to ensure the player actually moved.
             } else {
                 console.log("Tried to move vertically outside play area.");
             }
         } else {
             console.log("Tried to move horizontally outside play area.");
         }
+        GameObjectTracker.drawPiece(moveObject);
+        moveObject.handleCollision(new WallObject());
         return false;
+    }
+
+    handleCollision(collided){
+        console.log("Calling this means you should have implemented this method in a class that extended it, or it's a thing that should never have collided.");
     }
 
     determineDirection(player){
@@ -54,49 +66,10 @@ export class Movable extends GameObject {
         return {x:newX,y:newY};
     }
 
-    // moveRight(player) {
-    //     //console.log("Running 'moveRight()' in Movable, with pieceType : " + player.pieceType);
-    //     player.direction = 'east';
-    // }
 
-    // moveLeft(player) {
-    //     //console.log("Running 'moveLeft()' in Movable, with pieceType : " + player.pieceType);
-    //     this.move(
-    //         player,
-    //         {
-    //             x: player.x - 1,
-    //             y: player.y
-    //         }
-    //     );
-    // }
-
-    // moveUp(player) {
-    //     //console.log("Running 'moveUp()' in Movable, with pieceType : " + player.pieceType);
-    //     this.move(
-    //         player,
-    //         {
-    //             x: player.x,
-    //             y: player.y + 1
-    //         }
-    //     );
-    // }
-
-    // moveDown(player) {
-    //     //console.log("Running 'moveDown()' in Movable, with pieceType : " + player.pieceType);
-    //     this.move(
-    //         player,
-    //         {
-    //             x: player.x,
-    //             y: player.y - 1
-    //         }
-    //     );
-    // } 
-    
-    //likely dead for good 53-89
-
-    saveLastMove(player) {
+    saveLastMove(piece) {
         //console.log("Running 'saveLastMove() in Movable");
-        player.oldX = player.x;
-        player.oldY = player.y;
+        piece.oldX = piece.x;
+        piece.oldY = piece.y;
     }
 }

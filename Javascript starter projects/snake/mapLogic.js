@@ -45,13 +45,20 @@ export class MapLogic {
             currentX = 0;
             currentY--;
         }
-        MapLogic.renderGrid();
+        MapLogic.buildGrid();
         // console.log("Reached the end of 'prepGrid()'");
     }
 
     //Used with 'prepGrid()' when the page is loaded
     //Creates new <img>'s with the 'BlankSpace' gameObject. One for every item in 'gridSpaces[]'
-    static renderGrid() {
+    static reDrawGrid(){
+        console.log("Running 'reDrawGrid()'");
+        for(let child of GAME_WINDOW.children){
+            child.src = './images/svg/blank.svg';
+        }
+    }
+    
+    static buildGrid() {
         //console.log("Running 'renderGrid()'");
         //console.log(gridSpaces);
 
